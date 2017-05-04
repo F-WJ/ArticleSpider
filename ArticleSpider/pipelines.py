@@ -33,6 +33,9 @@ class JsonWithEncodingPipeline(object):
 
 
 # 保存到json文件里面（第二种方法）
+#
+#
+#
 class JsonExporterPipeline(object):
     # 调用scrapy提供的json export导出json文件
     def __init__(self):
