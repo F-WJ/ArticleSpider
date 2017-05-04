@@ -66,7 +66,8 @@ ROBOTSTXT_OBEY = False
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 # ITEM_PIPELINES就是一个通道.数字越少，就越优先进入pipelines.py里面
 ITEM_PIPELINES = {
-    'ArticleSpider.pipelines.JsonWithEncodingPipeline': 2,
+    # 'ArticleSpider.pipelines.JsonWithEncodingPipeline': 2,
+    'ArticleSpider.pipelines.JsonExporterPipeline': 2,
     # 'scrapy.pipelines.images.ImagesPipeline': 1,
     'ArticleSpider.pipelines.ArticleImagePipeline': 1,
 }
