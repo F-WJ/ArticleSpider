@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import re
+import datetime
 from scrapy.http import Request
 # 添加域名模块(python3)
 from urllib import parse
@@ -44,9 +45,9 @@ class JobboleSpider(scrapy.Spider):
             yield Request(url=parse.urljoin(response.url, post_url), meta={"front_image_url": image_url}, callback=self.parse_detail)
 
         # 提取下一页当url并交给scrapy进行下载
-        next_url = response.css(".next.page-numbers::attr(href)").extract_first("")
-        if next_url:
-            yield Request(url=parse.urljoin(response.url, post_url), callback=self.parse)
+        # next_url = response.css(".next.page-numbers::attr(href)").extract_first("")
+        # if next_url:l
+        #     yield Request(url=parse.urljoin(response.url, next_url), callback=self.parse)
 
     def parse_detail(self, response):
         article_item = JobBoleArticleItem()
@@ -55,10 +56,9 @@ class JobboleSpider(scrapy.Spider):
         front_image_url = response.meta.get("front_image_url", "")  # 提取文章封面图
         # extract_first()好处就是当万一数组为空时，防止报错，取代[0],不用再设置异常
         title = response.xpath('''//div[@class="entry-header"]/h1/text()''').extract_first("")
-        create_date = response.xpath("//p[@class='entry-meta-hide-on-mobile']/text()").extract()[0].strip().replace("·",
-                                                                                                                    '').strip()
-        praise_nums = response.xpath("//span[contains(@class,'vote-post-up')]/h10/text()").extract()[0]
-        fav_nums = response.xpath("//span[contains(@class,'bookmark-btn')]/text()").extract()[0]
+        create_date = response.xpath("//p[@class='entry-meta-hide-on-mobile']/text()").extract()[0].strip().replace("·", '').strip()
+        praise_nums = response.xpath("//span[contains(@class,'vote-post-up')]/h10/text()").extract_first("")
+        fav_nums = response.xpath("//span[contains(@class,'bookmark-btn')]/text()").extract_first("")
         match_re = re.match(r".*?(\d+).*", fav_nums)
         if match_re:
             fav_nums = int(match_re.group(1))
@@ -81,6 +81,10 @@ class JobboleSpider(scrapy.Spider):
         article_item["url_object_id"] = get_md5(response.url)
         article_item["title"] = title
         article_item["url"] = response.url
+        try:
+            create_date = datetime.datetime.strptime(create_date, "%Y/%m/%d").date()
+        except Exception as e:
+            create_date = datetime.datetime.now().date()
         article_item["create_date"] = create_date
         article_item["front_image_url"] = [front_image_url]
         article_item["praise_nums"] = praise_nums

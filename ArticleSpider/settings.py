@@ -66,10 +66,11 @@ ROBOTSTXT_OBEY = False
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 # ITEM_PIPELINES就是一个通道.数字越少，就越优先进入pipelines.py里面
 ITEM_PIPELINES = {
-    # 'ArticleSpider.pipelines.JsonWithEncodingPipeline': 2,
-    'ArticleSpider.pipelines.JsonExporterPipeline': 2,
-    # 'scrapy.pipelines.images.ImagesPipeline': 1,
-    'ArticleSpider.pipelines.ArticleImagePipeline': 1,
+    # # 'ArticleSpider.pipelines.JsonWithEncodingPipeline': 2,
+    # 'ArticleSpider.pipelines.JsonExporterPipeline': 2,
+    # # 'scrapy.pipelines.images.ImagesPipeline': 1,
+    # 'ArticleSpider.pipelines.ArticleImagePipeline': 1,
+    'ArticleSpider.pipelines.MysqlTwistedPipline': 1,
 }
 
 # 图片获取位置
@@ -104,3 +105,9 @@ IMAGE_MIN_WIDTH = 100
 # HTTPCACHE_DIR = 'httpcache'
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+# 配置mysql
+MYSQL_HOST = "127.0.0.1"
+MYSQL_DBNAME = "article_spider"
+MYSQL_USER = "root"
+MYSQL_PASSWORD = "qaz123456789"
